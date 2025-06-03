@@ -35,7 +35,7 @@ def current_datetime(timezone: str = "America/New_York") -> str:
 
 
 if __name__ == "__main__":
-    mcp.run(transport="streamable-http", host="127.0.0.1", port=9000)
+    mcp.run(transport="streamable-http", host="127.0.0.1", port=8000)
     # import asyncio
     # port = int(os.environ.get("PORT", 8000))
     # asyncio.run(
