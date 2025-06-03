@@ -79,9 +79,5 @@ def validate_phone_number(phone_number: str) -> str:
         return f"Validation error: {str(e)}"
 
 if __name__ == "__main__":
-    import os
     print("Starting Twilio SMS MCP Server")
-    # Set environment variables for port configuration
-    os.environ['PORT'] = '8080'
-    os.environ['HOST'] = '0.0.0.0'
     mcp.run(transport="streamable-http")
