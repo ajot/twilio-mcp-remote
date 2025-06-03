@@ -1,6 +1,6 @@
-# fastmcp
-mcp
+fastmcp
+# mcp
 python-dotenv
 twilio
 # gunicorn 
-# pytz
+pytz
