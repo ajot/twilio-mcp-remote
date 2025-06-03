@@ -36,7 +36,13 @@ def current_datetime(timezone: str = "America/New_York") -> str:
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))  # Default to 8080 for DigitalOcean
-    mcp.run(transport="streamable-http", host="0.0.0.0", port=port)
+    print(f"Starting server on port {port}")  # Add logging
+    mcp.run(
+        transport="http",  # Changed from streamable-http to http
+        host="0.0.0.0",
+        port=port,
+        log_level="debug"  # Add debug logging
+    )
 
     # import asyncio
     # port = int(os.environ.get("PORT", 8000))
