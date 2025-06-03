@@ -1,83 +1,48 @@
-# twilio-server.py
-from mcp.server.fastmcp import FastMCP
+# server.py
+
+from fastmcp import FastMCP
+import datetime
+import pytz
 import os
-from dotenv import load_dotenv
-from twilio.rest import Client
 
-# Load environment variables from .env file
-load_dotenv()
+mcp = FastMCP(
+    name="Current Date and Time",
+    instructions="When you are asked for the current date or time, call current_datetime() and pass along an optional timezone parameter (defaults to NYC)."
+)
 
-# Get Twilio credentials and phone numbers from environment variables
-account_sid = os.getenv('TWILIO_ACCOUNT_SID')
-auth_token = os.getenv('TWILIO_AUTH_TOKEN')
-phone_from = os.getenv('TWILIO_PHONE_FROM')
-default_phone_to = os.getenv('TWILIO_PHONE_TO')
-
-# Initialize Twilio client with account SID and auth token
-client = Client(account_sid, auth_token)
-
-mcp = FastMCP("Twilio SMS Sender")
 
 @mcp.tool()
-def send_sms(message: str, to_phone: str = None) -> str:
+def current_datetime(timezone: str = "America/New_York") -> str:
     """
-    Send an SMS message using Twilio
-    
+    Returns the current date and time as a string. 
+    If you are asked for the current date or time, call this function.
     Args:
-    - message: The text message to send
-    - to_phone: Optional phone number to send to. If not provided, uses default TWILIO_PHONE_TO
+        timezone: Timezone name (e.g., 'UTC', 'US/Pacific', 'Europe/London').
+                 Defaults to 'America/New_York'.
     
     Returns:
-    - Success message with message SID or error details
+        A formatted date and time string.
     """
-    try:
-        # Use default phone number if not provided
-        send_to = to_phone or default_phone_to
-        
-        # Validate input
-        if not message:
-            return "Error: Message cannot be empty"
-        
-        if not send_to:
-            return "Error: No phone number specified"
-        
-        # Send message using Twilio
-        message_obj = client.messages.create(
-            body=message,
-            from_=phone_from,
-            to=send_to
-        )
-        
-        return f"Message sent successfully to {send_to}. SID: {message_obj.sid}"
     
-    except Exception as e:
-        return f"Failed to send message. Error: {str(e)}"
+    try:
+        tz = pytz.timezone(timezone)
+        now = datetime.datetime.now(tz)
+        return now.strftime("%Y-%m-%d %H:%M:%S %Z")
+    except pytz.exceptions.UnknownTimeZoneError:
+        return f"Error: Unknown timezone '{timezone}'. Please use a valid timezone name."
 
-@mcp.tool()
-def validate_phone_number(phone_number: str) -> str:
-    """
-    Validate a phone number format
-    
-    Args:
-    - phone_number: Phone number to validate
-    
-    Returns:
-    - Validation result
-    """
-    try:
-        # Simple validation - you might want to use a more robust library like `phonenumbers`
-        if not phone_number:
-            return "Error: Phone number cannot be empty"
-        
-        # Basic format check (modify as needed)
-        if not (phone_number.startswith('+') and len(phone_number) > 10):
-            return "Error: Invalid phone number format. Must start with '+' and include country code"
-        
-        return f"Phone number {phone_number} appears to be valid"
-    
-    except Exception as e:
-        return f"Validation error: {str(e)}"
+
+
 
 if __name__ == "__main__":
-    print("Starting Twilio SMS MCP Server")
-    mcp.run(host="0.0.0.0", port=8080)
+    mcp.run(transport="streamable-http", host="127.0.0.1", port=9000)
+
+    # import asyncio
+    # port = int(os.environ.get("PORT", 8000))
+    # asyncio.run(
+    #     mcp.run_sse_async(
+    #         host="0.0.0.0",  # Changed from 127.0.0.1 to allow external connections
+    #         port=port,
+    #         log_level="debug"
+    #     )
+    # )
