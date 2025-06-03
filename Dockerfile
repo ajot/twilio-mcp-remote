@@ -13,4 +13,5 @@ COPY . .
 EXPOSE 8080
 
 # Start the MCP server
-CMD ["fastmcp", "run", "server.py:mcp"] 
+# CMD ["fastmcp", "run", "server.py:mcp"] 
+CMD ["python", "server.py"]
