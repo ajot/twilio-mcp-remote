@@ -1,1 +1,0 @@
-web: gunicorn server:mcp --bind 0.0.0.0:8080 --worker-class uvicorn.workers.UvicornWorker 
