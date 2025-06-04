@@ -1,7 +1,6 @@
+fastmcp
 # mcp
-mcp>=1.9.2
 python-dotenv
 twilio
 # gunicorn 
 pytz
-uvicorn
