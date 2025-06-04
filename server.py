@@ -1,9 +1,10 @@
 # server.py
 
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 import datetime
 import pytz
 import os
+import asyncio
 
 mcp = FastMCP(
     name="Current Date and Time",
@@ -35,13 +36,23 @@ def current_datetime(timezone: str = "America/New_York") -> str:
 
 
 if __name__ == "__main__":
-    # mcp.run(transport="streamable-http", host="0.0.0.0", port=8000)
-    import asyncio
     port = int(os.environ.get("PORT", 8000))
     asyncio.run(
         mcp.run_sse_async(
-            host="0.0.0.0",  # Changed from 127.0.0.1 to allow external connections
+            host="0.0.0.0",  # Allow external connections
             port=port,
-            log_level="debug"
+            log_level="info"
         )
     )
+    # mcp.run()
+    
+    # mcp.run(transport="streamable-http", host="0.0.0.0", port=port)
+    # import asyncio
+    # port = int(os.environ.get("PORT", 8000))
+    # asyncio.run(
+    #     mcp.run_sse_async(
+    #         host="0.0.0.0",  # Changed from 127.0.0.1 to allow external connections
+    #         port=port,
+    #         log_level="debug"
+    #     )
+    # )

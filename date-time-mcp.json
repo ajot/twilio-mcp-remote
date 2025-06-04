@@ -1,0 +1,7 @@
+    "datetime": {
+      "command": "fastmcp",
+      "args": [
+          "run my_server.py:mcp"
+        ],
+        "description": "Get date and time in a given timezone"
+      },
