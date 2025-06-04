@@ -36,14 +36,7 @@ def current_datetime(timezone: str = "America/New_York") -> str:
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    asyncio.run(
-        mcp.run_sse_async(
-            host="0.0.0.0",  # Allow external connections
-            port=port,
-            log_level="info"
-        )
-    )
+    asyncio.run(mcp.run_sse_async())
     # mcp.run()
     
     # mcp.run(transport="streamable-http", host="0.0.0.0", port=port)
